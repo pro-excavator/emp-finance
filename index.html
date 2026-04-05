@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>EMP财务协作系统 | 手续费版</title>
+    <title>EMP财务协作系统 | 完整修复版</title>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
     <script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
@@ -22,79 +22,53 @@
         body.dark-mode .pending-row { background-color: #2d2a1e !important; }
         body.dark-mode .duplicate-warning { background-color: #2a1e1e !important; }
         body.dark-mode .btn-outline { background: #1e293b; color: #e2e8f0; border-color: #475569; }
-        body.dark-mode .history-toggle-btn { background: #334155; color: #e2e8f0; }
-        body.dark-mode .history-section { background: #1e293b; border-color: #334155; }
-        body.dark-mode .freight-detail { background: #0f172a; border-color: #334155; }
-        body.dark-mode .staff-summary-card { background: #1e293b; border-color: #334155; }
         .container { max-width: 1600px; margin: 0 auto; }
         .flex-between { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
         .dark-mode-toggle { background: #334155; color: white; border: none; padding: 8px 16px; border-radius: 40px; cursor: pointer; font-size: 14px; }
         .dashboard { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px; }
-        .stat-card { background: white; padding: 16px 20px; border-radius: 20px; border: 1px solid #e2edf2; box-shadow: 0 2px 8px rgba(0,0,0,0.03); }
+        .stat-card { background: white; padding: 16px 20px; border-radius: 20px; border: 1px solid #e2edf2; }
         .stat-val { font-size: 28px; font-weight: 800; margin-top: 6px; display: block; }
         .toolbar { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; background: white; padding: 14px 18px; border-radius: 24px; margin-bottom: 20px; border: 1px solid #e2edf2; }
         .spacer { flex: 1; }
         .btn { border: none; padding: 8px 18px; border-radius: 40px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; font-size: 13px; }
         .btn-primary { background: #0f3b5c; color: white; }
-        .btn-primary:hover { background: #082b44; }
         .btn-success { background: #166534; color: white; }
-        .btn-success:hover { background: #0f4a26; }
         .btn-warning { background: #ea580c; color: white; }
-        .btn-warning:hover { background: #c2410c; }
         .btn-danger { background: #b91c1c; color: white; }
-        .btn-danger:hover { background: #991b1b; }
         .btn-outline { background: white; border: 1px solid #cbd5e1; color: #1e293b; }
         .btn-secondary { background: #6c757d; color: white; }
-        .btn-secondary:hover { background: #5a6268; }
-        .btn-freight { background: #0891b2; color: white; }
-        .btn-freight:hover { background: #0e7490; }
         .filter-group { display: flex; gap: 8px; align-items: center; background: #f1f5f9; padding: 5px 12px; border-radius: 40px; }
         .filter-group input, .filter-group select { background: transparent; border: none; padding: 6px 0; outline: none; }
         .mode-switch { background: #f1f5f9; padding: 6px 14px; border-radius: 40px; display: inline-flex; align-items: center; gap: 10px; font-size: 12px; }
         .table-wrapper { background: white; border-radius: 20px; border: 1px solid #e2edf2; overflow-x: auto; }
-        table { width: 100%; border-collapse: collapse; font-size: 12px; min-width: 1200px; }
-        th { background: #f8fafc; padding: 14px 10px; text-align: left; font-weight: 600; border-bottom: 1px solid #e2e8f0; position: sticky; top: 0; }
+        table { width: 100%; border-collapse: collapse; font-size: 12px; min-width: 1300px; }
+        th { background: #f8fafc; padding: 14px 10px; text-align: left; font-weight: 600; border-bottom: 1px solid #e2e8f0; }
         td { padding: 12px 10px; border-bottom: 1px solid #f1f5f9; vertical-align: top; }
         .pending-row { background-color: #fff9eb !important; }
         .duplicate-warning { background-color: #fef2f2 !important; }
         .badge-wait { background: #fee2e2; color: #b91c1c; padding: 2px 8px; border-radius: 40px; font-size: 11px; display: inline-block; }
         .badge-done { background: #dcfce7; color: #15803d; padding: 2px 8px; border-radius: 40px; font-size: 11px; display: inline-block; }
-        .badge-duplicate { background: #fef3c7; color: #d97706; padding: 2px 6px; border-radius: 40px; font-size: 10px; display: inline-block; }
         .action-btn { background: none; border: none; cursor: pointer; font-size: 12px; margin: 0 2px; padding: 4px 8px; border-radius: 30px; }
         .action-btn.claim { background: #fef3c7; color: #b45309; }
         .action-btn.edit-recorder { background: #e0f2fe; color: #0369a1; }
         .action-btn.del { color: #9ca3af; }
         .action-btn.del:hover { color: #dc2626; background: #fee2e2; }
         .action-btn.freight { background: #cffafe; color: #0891b2; }
-        .action-btn.freight:hover { background: #a5f3fc; }
         .serial-num { color: #475569; font-weight: 500; font-size: 12px; text-align: center; }
         .footer-note { margin-top: 12px; font-size: 11px; color: #64748b; text-align: right; }
         .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 10000; display: flex; align-items: center; justify-content: center; }
         .admin-panel { background: #fefce8; border-left: 4px solid #f59e0b; margin-bottom: 20px; }
         .password-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #e2edf2; flex-wrap: wrap; gap: 10px; }
-        .password-item:last-child { border-bottom: none; }
-        .password-input-group { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
-        .history-toggle-btn { background: #e2e8f0; border: none; padding: 6px 12px; border-radius: 30px; font-size: 12px; cursor: pointer; margin: 10px 0; display: inline-flex; align-items: center; gap: 6px; }
-        .history-toggle-btn:hover { background: #cbd5e1; }
-        .history-section { background: #f8fafc; border-radius: 16px; padding: 12px; margin-top: 10px; border: 1px solid #e2edf2; }
-        .history-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 10px; }
         .freight-detail { background: #f1f5f9; border-radius: 12px; padding: 6px 10px; margin-top: 6px; font-size: 11px; border-left: 3px solid #0891b2; }
         .staff-summary-card { background: white; border-radius: 16px; padding: 12px 16px; border: 1px solid #e2edf2; margin-bottom: 20px; }
-        .staff-summary-title { font-weight: 600; font-size: 13px; margin-bottom: 8px; color: #0f3b5c; }
-        body.dark-mode .staff-summary-title { color: #facc15; }
         .fee-col { color: #dc2626; font-weight: 500; }
-        textarea { width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 16px; font-family: monospace; font-size: 12px; resize: vertical; }
-        .preview-box { background: #f8fafc; border-radius: 12px; padding: 12px; margin-top: 12px; font-size: 12px; max-height: 200px; overflow: auto; }
         h1 { font-size: 1.5rem; }
         h1 i { color: #0f3b5c; margin-right: 8px; }
         body.dark-mode h1 i { color: #facc15; }
         body.dark-mode .admin-panel { background: #1e2a3a; }
         body.dark-mode .password-item { border-bottom-color: #334155; }
-        body.dark-mode .history-section { background: #1e293b; border-color: #334155; }
-        body.dark-mode .history-toggle-btn { background: #334155; color: #e2e8f0; }
-        body.dark-mode .freight-detail { background: #0f172a; border-color: #334155; }
-        .staff-filter-select { min-width: 140px; background: white; border: 1px solid #cbd5e1; border-radius: 40px; padding: 6px 12px; }
-        body.dark-mode .staff-filter-select { background: #1e293b; border-color: #475569; color: #e2e8f0; }
+        body.dark-mode .freight-detail { background: #0f172a; }
+        body.dark-mode .staff-summary-card { background: #1e293b; }
     </style>
 </head>
 <body>
@@ -104,16 +78,12 @@
         <button id="darkModeToggle" class="dark-mode-toggle"><i class="fas fa-moon"></i> 深色模式</button>
     </div>
 
-    <!-- 管理员密码管理面板 -->
     <div id="adminPanel" class="toolbar admin-panel" style="display:none; flex-direction:column; align-items:stretch;">
         <div class="flex-between" style="margin-bottom:10px;">
             <span><i class="fas fa-key"></i> 🔐 密码管理（仅管理员可见）</span>
-            <span style="font-size:12px; color:#f59e0b;">修改后立即生效</span>
         </div>
         <div id="passwordList"></div>
-        <div style="margin-top:10px; font-size:12px; color:#666; text-align:center;">
-            💡 管理员密码555 | 财务密码666 | 跟单密码888
-        </div>
+        <div style="margin-top:10px; font-size:12px; color:#666; text-align:center;">💡 管理员密码555 | 财务密码666 | 跟单密码888</div>
     </div>
 
     <div class="dashboard">
@@ -122,7 +92,6 @@
         <div class="stat-card"><span><i class="fas fa-chinese-yuan-sign"></i> RMB总额</span><span class="stat-val" id="statTotalRmb" style="color:#166534">¥0.00</span></div>
     </div>
 
-    <!-- 财务专用面板 -->
     <div id="financePanel" style="display:none;" class="toolbar" style="background:#fefce8; border-left: 4px solid #f59e0b; flex-wrap:wrap;">
         <i class="fas fa-coins" style="color:#f59e0b;"></i>
         <span style="font-weight:600;">财务操作区</span>
@@ -134,60 +103,46 @@
         <button class="btn btn-danger" onclick="clearAllData()">⚠️ 一键清空</button>
     </div>
 
-    <!-- 跟单人员工具条 -->
     <div id="salesPanel" style="display:none;" class="toolbar">
         <div class="filter-group"><i class="fas fa-search"></i><input type="text" id="searchInput2" placeholder="合同号/客户" onkeyup="filterTableSales()"></div>
         <div class="spacer"></div>
         <span style="font-size:12px;"><i class="fas fa-info-circle"></i> 跟单模式：默认显示最近7天到款</span>
     </div>
 
-    <!-- 财务工具条 -->
     <div id="financeToolbar" style="display:none;" class="toolbar" style="flex-wrap:wrap;">
         <button class="btn btn-success" onclick="exportPrintReady()"><i class="fas fa-file-excel"></i> 导出全部</button>
         <button class="btn btn-primary" onclick="exportStaffDetail()"><i class="fas fa-user"></i> 导出当前业务员明细</button>
-        <button class="btn btn-secondary" onclick="exportStaffSummary()"><i class="fas fa-chart-bar"></i> 导出业务员汇总报表</button>
+        <button class="btn btn-secondary" onclick="exportStaffSummary()"><i class="fas fa-chart-bar"></i> 导出业务员汇总</button>
         <div class="mode-switch">
-            <i class="fas fa-shield-alt"></i>
             <label><input type="radio" name="importMode" value="smart" checked> 🛡️ 智能防重</label>
             <label><input type="radio" name="importMode" value="force"> ⚠️ 强制保留</label>
         </div>
         <div class="filter-group"><i class="fas fa-search"></i><input type="text" id="searchInput" placeholder="合同号/客户" onkeyup="filterTable()"></div>
         <div class="filter-group">
             <i class="fas fa-user-tie"></i>
-            <select id="staffFilterSelect" onchange="filterByStaff()">
-                <option value="">全部业务员</option>
-            </select>
+            <select id="staffFilterSelect" onchange="filterByStaff()"><option value="">全部业务员</option></select>
         </div>
         <div class="spacer"></div>
         <span><i class="fas fa-upload"></i> Excel导入</span>
         <input type="file" id="excelFileInput" accept=".xlsx, .xls" style="width:auto;">
         <button class="btn btn-warning" onclick="smartImportExcel()">导入Excel</button>
-        <button class="btn btn-outline" onclick="showPasteModal()" style="background:#e0f2fe;">📋 智能粘贴板</button>
+        <button class="btn btn-outline" onclick="showPasteModal()">📋 智能粘贴板</button>
     </div>
 
-    <!-- 业务员汇总统计卡片 -->
     <div id="staffSummaryCard" class="staff-summary-card" style="display: none;">
         <div class="staff-summary-title"><i class="fas fa-chart-line"></i> 📊 当前筛选统计</div>
         <div id="staffSummaryContent" style="font-size: 13px; line-height: 1.8;"></div>
     </div>
 
     <div class="table-wrapper">
-        <div id="recentTableContainer"></div>
-        <div id="historySection" class="history-section" style="display:none;">
-            <div class="history-header">
-                <span><i class="fas fa-archive"></i> 📜 历史到款记录（7天前）</span>
-                <button id="toggleHistoryBtn" class="history-toggle-btn"><i class="fas fa-chevron-down"></i> 展开查看</button>
-            </div>
-            <div id="historyTableContainer" style="display:none;"></div>
-        </div>
-        <table>
-            <thead id="mainTableHead">
+        <table id="mainTable">
+            <thead>
                 <tr><th>#</th><th>操作</th><th>状态</th><th>到账日期</th><th>账户</th><th>合同号</th><th>客户</th><th>币种/金额</th><th>手续费</th><th>实到金额</th><th>折算RMB</th><th>运费</th><th>负责人</th><th>提示</th></tr>
             </thead>
             <tbody id="tableBody"></tbody>
         </table>
     </div>
-    <div class="footer-note">✅ 管理员密码555 | 财务密码666 | 跟单密码888 | 手续费已自动导入 | 可筛选业务员并导出明细/汇总报表</div>
+    <div class="footer-note">✅ 管理员密码555 | 财务密码666 | 跟单密码888 | 手续费自动导入 | 可筛选业务员导出</div>
 </div>
 
 <script>
@@ -208,7 +163,6 @@
     let allRecords = [];
     let duplicateFingerprints = new Set();
     let unsubscribe = null;
-    let historyExpanded = false;
     let currentStaffFilter = '';
     let freightData = {};
     
@@ -218,26 +172,14 @@
     const ALL_STAFF = [ADMIN_USER, ...FINANCE_USERS, ...SALES_USERS];
     
     let passwords = {
-        "王丽娜": "555",
-        "李月": "666",
-        "李洋洋": "666",
-        "谭硕": "888",
-        "曲宁": "888",
-        "王静楠": "888",
-        "常超": "888",
-        "于圣一": "888",
-        "田思宇": "888",
-        "张娜": "888",
-        "孙秋迪": "888",
-        "腾筱宣": "888",
-        "王宇文": "888"
+        "王丽娜": "555", "李月": "666", "李洋洋": "666",
+        "谭硕": "888", "曲宁": "888", "王静楠": "888", "常超": "888", "于圣一": "888",
+        "田思宇": "888", "张娜": "888", "孙秋迪": "888", "腾筱宣": "888", "王宇文": "888"
     };
     
     function loadPasswords() {
         const saved = localStorage.getItem('emp_finance_passwords');
-        if (saved) {
-            try { Object.assign(passwords, JSON.parse(saved)); } catch(e) {}
-        }
+        if (saved) { try { Object.assign(passwords, JSON.parse(saved)); } catch(e) {} }
     }
     function savePasswords() { localStorage.setItem('emp_finance_passwords', JSON.stringify(passwords)); }
     function verifyLogin(user, pwd) { return passwords[user] === pwd; }
@@ -262,10 +204,10 @@
         loginModal.className = 'modal';
         loginModal.innerHTML = `
             <div style="background:white;border-radius:24px;padding:24px;max-width:350px;text-align:center;">
-                <h3><i class="fas fa-hand-holding-usd"></i> EMP 财务协作</h3>
+                <h3>EMP 财务协作</h3>
                 <div style="margin:16px 0;"><input type="password" id="loginPass" placeholder="密码" style="width:100%;padding:12px;border-radius:40px;border:1px solid #cbd5e1;"></div>
-                <div style="margin:16px 0;"><select id="loginUser" style="width:100%;padding:12px;border-radius:40px;border:1px solid #cbd5e1;">${ALL_STAFF.map(n => `<option value="${n}">${n}</option>`).join('')}</select></div>
-                <button class="btn btn-primary" onclick="handleLogin()" style="width:100%;justify-content:center;">进入工作台</button>
+                <div style="margin:16px 0;"><select id="loginUser" style="width:100%;padding:12px;border-radius:40px;">${ALL_STAFF.map(n => `<option value="${n}">${n}</option>`).join('')}</select></div>
+                <button class="btn btn-primary" onclick="handleLogin()" style="width:100%;">进入工作台</button>
             </div>
         `;
         document.body.appendChild(loginModal);
@@ -286,47 +228,48 @@
         document.getElementById('salesPanel').style.display = (!isFinance && !isAdmin) ? 'flex' : 'none';
         document.getElementById('adminPanel').style.display = isAdmin ? 'flex' : 'none';
         
-        if (isAdmin) renderPasswordManager();
+        if (isAdmin) {
+            const container = document.getElementById('passwordList');
+            let html = '';
+            for (let user of ALL_STAFF) {
+                let role = user === ADMIN_USER ? '👑 管理员' : (FINANCE_USERS.includes(user) ? '💰 财务' : '📋 跟单');
+                html += `<div class="password-item">
+                    <div><strong>${user}</strong> <span style="font-size:11px;">(${role})</span><br><span style="font-size:10px; color:#888;">当前密码：${passwords[user]}</span></div>
+                    <div><input type="password" id="newPwd_${user}" placeholder="新密码" style="padding:6px 12px; border-radius:30px; width:130px;">
+                    <button class="btn btn-secondary" onclick="updateUserPassword('${user}')">修改</button></div>
+                </div>`;
+            }
+            container.innerHTML = html;
+        }
         
         const staffSelect = document.getElementById('staffFilterSelect');
-        if (staffSelect) {
-            staffSelect.innerHTML = '<option value="">全部业务员</option>' + ALL_STAFF.map(s => `<option value="${s}">${s}</option>`).join('');
-        }
+        if (staffSelect) staffSelect.innerHTML = '<option value="">全部业务员</option>' + ALL_STAFF.map(s => `<option value="${s}">${s}</option>`).join('');
         
         startListener();
     };
-    
-    function renderPasswordManager() {
-        const container = document.getElementById('passwordList');
-        let html = '';
-        for (let user of ALL_STAFF) {
-            let role = user === ADMIN_USER ? '👑 管理员' : (FINANCE_USERS.includes(user) ? '💰 财务' : '📋 跟单');
-            let currentPwd = passwords[user] || '未设置';
-            html += `<div class="password-item">
-                <div><strong>${user}</strong> <span style="font-size:11px;">(${role})</span><br><span style="font-size:10px; color:#888;">当前密码：${currentPwd}</span></div>
-                <div class="password-input-group">
-                    <input type="password" id="newPwd_${user}" placeholder="新密码" style="padding:6px 12px; border-radius:30px; border:1px solid #cbd5e1; width:130px;">
-                    <button class="btn btn-secondary" style="padding:4px 12px;" onclick="updateUserPassword('${user}')">修改密码</button>
-                </div>
-            </div>`;
-        }
-        container.innerHTML = html;
-    }
     
     window.updateUserPassword = function(user) {
         const input = document.getElementById(`newPwd_${user}`);
         const newPwd = input.value.trim();
         if (!newPwd) { alert('请输入新密码'); return; }
-        if (newPwd.length < 3) { alert('密码长度至少3位'); return; }
         changePassword(user, newPwd);
         input.value = '';
-        alert(`✅ ${user} 的密码已修改为：${newPwd}`);
-        renderPasswordManager();
+        alert(`✅ ${user} 密码已修改`);
+        const container = document.getElementById('passwordList');
+        if (container) {
+            let html = '';
+            for (let u of ALL_STAFF) {
+                let role = u === ADMIN_USER ? '👑 管理员' : (FINANCE_USERS.includes(u) ? '💰 财务' : '📋 跟单');
+                html += `<div class="password-item"><div><strong>${u}</strong> <span style="font-size:11px;">(${role})</span><br><span style="font-size:10px; color:#888;">当前密码：${passwords[u]}</span></div>
+                    <div><input type="password" id="newPwd_${u}" placeholder="新密码" style="padding:6px 12px; border-radius:30px; width:130px;">
+                    <button class="btn btn-secondary" onclick="updateUserPassword('${u}')">修改</button></div></div>`;
+            }
+            container.innerHTML = html;
+        }
     };
     
     window.filterByStaff = function() {
-        const select = document.getElementById('staffFilterSelect');
-        currentStaffFilter = select ? select.value : '';
+        currentStaffFilter = document.getElementById('staffFilterSelect')?.value || '';
         renderTable();
     };
     
@@ -339,69 +282,37 @@
         return data;
     }
     
-    async function setFreight(contractNo, amount, detail, user) {
+    async function setFreight(contractNo, amount, detail) {
         if (!contractNo) return false;
         await db.collection('freight').doc(contractNo).set({
-            contractNo: contractNo,
-            amount: amount,
-            detail: detail,
-            updatedBy: user,
-            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+            contractNo, amount, detail, updatedBy: currentUser, updatedAt: firebase.firestore.FieldValue.serverTimestamp()
         });
         freightData[contractNo] = { amount, detail };
         return true;
     }
     
-    async function showFreightModal(contractNo, currentFreightAmount, currentFreightDetail) {
-        if (!contractNo || contractNo === '—') {
-            alert('该记录暂无合同号，无法登记运费');
-            return;
-        }
+    async function showFreightModal(contractNo, currentAmount, currentDetail) {
+        if (!contractNo || contractNo === '—') { alert('无合同号，无法登记运费'); return; }
         const existing = await getFreight(contractNo);
         if (existing.amount && existing.amount !== '无运费' && existing.amount !== '') {
-            if (!confirm(`该合同号 ${contractNo} 已有运费记录：${existing.amount}\n是否修改？`)) return;
+            if (!confirm(`该合同号已有运费：${existing.amount}\n是否修改？`)) return;
         }
         let modal = document.createElement('div');
         modal.className = 'modal';
-        modal.innerHTML = `
-            <div style="background:white;border-radius:24px;padding:24px;max-width:500px;width:90%;">
-                <h4><i class="fas fa-truck"></i> 运费登记</h4>
-                <p style="font-size:12px; color:#666; margin:10px 0;">合同号：<strong>${contractNo}</strong></p>
-                <div style="margin:12px 0;">
-                    <label>运费金额：</label>
-                    <input type="text" id="freightAmount" placeholder="例如：¥500 或 无运费" value="${currentFreightAmount || ''}" style="width:100%; padding:8px; border-radius:12px; border:1px solid #cbd5e1; margin-top:5px;">
-                </div>
-                <div style="margin:12px 0;">
-                    <label>运费明细：</label>
-                    <textarea id="freightDetail" rows="3" placeholder="例如：顺丰空运，单号SF123456789，运费500元" style="width:100%; padding:8px; border-radius:12px; border:1px solid #cbd5e1; margin-top:5px;">${currentFreightDetail || ''}</textarea>
-                </div>
-                <div style="display:flex; gap:10px; justify-content:flex-end; margin-top:16px;">
-                    <button class="btn btn-outline" onclick="this.closest('.modal').remove()">取消</button>
-                    <button class="btn btn-primary" id="saveFreightBtn">保存运费</button>
-                </div>
-            </div>
-        `;
+        modal.innerHTML = `<div style="background:white;border-radius:24px;padding:24px;max-width:500px;"><h4>运费登记</h4><p>合同号：<strong>${contractNo}</strong></p>
+            <input type="text" id="freightAmount" placeholder="运费金额（如：¥500 或 无运费）" value="${currentAmount || ''}" style="width:100%;padding:8px;margin:10px 0;border-radius:12px;border:1px solid #cbd5e1;">
+            <textarea id="freightDetail" rows="3" placeholder="运费明细（如：顺丰空运，单号SF123）" style="width:100%;padding:8px;border-radius:12px;border:1px solid #cbd5e1;">${currentDetail || ''}</textarea>
+            <div style="margin-top:16px;display:flex;gap:10px;justify-content:flex-end;"><button class="btn btn-outline" onclick="this.closest('.modal').remove()">取消</button><button class="btn btn-primary" id="saveFreightBtn">保存</button></div></div>`;
         document.body.appendChild(modal);
         document.getElementById('saveFreightBtn').onclick = async () => {
             const amount = document.getElementById('freightAmount').value.trim();
             const detail = document.getElementById('freightDetail').value.trim();
-            if (!amount) { alert('请填写运费金额（可填"无运费"）'); return; }
-            await setFreight(contractNo, amount, detail, currentUser);
-            alert(`✅ 运费已保存\n合同号：${contractNo}\n金额：${amount}`);
+            if (!amount) { alert('请填写运费金额'); return; }
+            await setFreight(contractNo, amount, detail);
+            alert(`✅ 运费已保存`);
             modal.remove();
             renderTable();
         };
-    }
-    
-    function getDaysAgoDate(days) {
-        let d = new Date();
-        d.setDate(d.getDate() - days);
-        return d.toISOString().slice(0,10);
-    }
-    
-    function isWithinDays(dateStr, days) {
-        if (!dateStr) return true;
-        return dateStr >= getDaysAgoDate(days);
     }
     
     function getFilteredRecords() {
@@ -411,7 +322,6 @@
         } else {
             searchTerm = (document.getElementById('searchInput2')?.value || '').toLowerCase();
         }
-        
         let filtered = allRecords;
         if (searchTerm) {
             filtered = filtered.filter(r => (r.contract||'').toLowerCase().includes(searchTerm) || (r.customer||'').toLowerCase().includes(searchTerm));
@@ -426,104 +336,52 @@
         let filtered = getFilteredRecords();
         let sorted = [...filtered].sort((a,b) => (b.date || '').localeCompare(a.date || ''));
         
-        let recentRecords = [];
-        let historyRecords = [];
-        
-        if (!isFinance && !isAdmin) {
-            recentRecords = sorted.filter(r => isWithinDays(r.date, 7));
-            historyRecords = sorted.filter(r => !isWithinDays(r.date, 7));
+        // 更新统计卡片
+        const summaryCard = document.getElementById('staffSummaryCard');
+        if (isFinance || isAdmin) {
+            if (currentStaffFilter) {
+                let totalCount = filtered.length;
+                let totalRmb = filtered.reduce((s,r) => s + (r.rmbValue||0), 0);
+                let totalFee = filtered.reduce((s,r) => s + (r.fee||0), 0);
+                document.getElementById('staffSummaryContent').innerHTML = `👤 业务员：<strong>${currentStaffFilter}</strong><br>📋 到款笔数：${totalCount}<br>💸 手续费总额：${totalFee.toFixed(2)}<br>🇨🇳 RMB总额：¥ ${totalRmb.toLocaleString()}`;
+                summaryCard.style.display = 'block';
+            } else {
+                summaryCard.style.display = 'none';
+            }
         } else {
-            recentRecords = sorted;
-            historyRecords = [];
+            summaryCard.style.display = 'none';
         }
         
-        updateStaffSummary(filtered);
-        
-        let allContracts = [...new Set(recentRecords.map(r => r.contract).filter(c => c && c !== '—'))];
+        // 获取运费
+        let allContracts = [...new Set(sorted.map(r => r.contract).filter(c => c && c !== '—'))];
         for (let contract of allContracts) { await getFreight(contract); }
         
-        await renderTableBodyWithFreight('tableBody', recentRecords);
-        
-        const historySection = document.getElementById('historySection');
-        const historyContainer = document.getElementById('historyTableContainer');
-        
-        if (historyRecords.length > 0 && !isFinance && !isAdmin) {
-            historySection.style.display = 'block';
-            let historyContracts = [...new Set(historyRecords.map(r => r.contract).filter(c => c && c !== '—'))];
-            for (let contract of historyContracts) { await getFreight(contract); }
-            await renderTableBodyWithFreight('historyTableContainer', historyRecords);
-        } else {
-            historySection.style.display = 'none';
-        }
-        
-        updateStats();
-    }
-    
-    function updateStaffSummary(records) {
-        const summaryCard = document.getElementById('staffSummaryCard');
-        if (!isFinance && !isAdmin) {
-            summaryCard.style.display = 'none';
-            return;
-        }
-        if (!currentStaffFilter) {
-            summaryCard.style.display = 'none';
-            return;
-        }
-        let totalCount = records.length;
-        let totalOriginalAmount = 0;
-        let totalRmb = 0;
-        let totalFee = 0;
-        let currencySummary = {};
-        for (let r of records) {
-            totalOriginalAmount += r.actual || 0;
-            totalRmb += r.rmbValue || 0;
-            totalFee += r.fee || 0;
-            let cur = r.cur || 'USD';
-            currencySummary[cur] = (currencySummary[cur] || 0) + (r.actual || 0);
-        }
-        let currencyText = Object.entries(currencySummary).map(([cur, amt]) => `${cur} ${amt.toLocaleString()}`).join(' | ');
-        document.getElementById('staffSummaryContent').innerHTML = `
-            👤 业务员：<strong>${currentStaffFilter}</strong><br>
-            📋 到款笔数：<strong>${totalCount}</strong> 笔<br>
-            💰 原币总额：<strong>${currencyText || '0'}</strong><br>
-            💸 手续费总额：<strong>${totalFee.toFixed(2)}</strong><br>
-            🇨🇳 折算RMB总额：<strong>¥ ${totalRmb.toLocaleString(undefined, {minimumFractionDigits:2})}</strong>
-        `;
-        summaryCard.style.display = 'block';
-    }
-    
-    async function renderTableBodyWithFreight(containerId, records) {
-        const tbody = document.getElementById(containerId);
+        const tbody = document.getElementById('tableBody');
         if (!tbody) return;
-        if (records.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="14" style="text-align:center">暂无数据</td></tr>';
-            return;
-        }
+        if (sorted.length === 0) { tbody.innerHTML = '<tr><td colspan="14" style="text-align:center">暂无数据</td></tr>'; return; }
+        
         let html = '';
-        for (let i = 0; i < records.length; i++) {
-            const r = records[i];
+        for (let i = 0; i < sorted.length; i++) {
+            const r = sorted[i];
             let isPending = r.status === '待认领';
-            let isDup = isDuplicateRecord(r);
+            let isDup = (() => { let fp = `${r.date || ''}|${r.acc || ''}|${r.actual || 0}|${r.cur || ''}`; return duplicateFingerprints.has(fp); })();
             let canClaim = isPending && currentUser;
             let canDel = (isFinance || isAdmin);
             let canEditRecorder = (isFinance || isAdmin);
-            let canEditFreight = true;
-            let rowClass = isPending ? 'pending-row' : (isDup ? 'duplicate-warning' : '');
-            let recorderDisplay = r.recorder && r.recorder !== "" ? r.recorder : '未认领';
             let contractNo = r.contract && r.contract !== '—' ? r.contract : '';
             let freight = freightData[contractNo] || { amount: '', detail: '' };
             let freightDisplay = freight.amount || '未登记';
-            let freightDetailDisplay = freight.detail ? `<div class="freight-detail"><strong>📦 运费明细：</strong> ${freight.detail}</div>` : '';
+            let freightDetailDisplay = freight.detail ? `<div class="freight-detail">📦 ${freight.detail}</div>` : '';
             let feeAmount = r.fee || 0;
             let actualAmount = (r.actual || 0) - feeAmount;
             
-            html += `<tr class="${rowClass}">
+            html += `<tr class="${isPending ? 'pending-row' : ''}">
                 <td class="serial-num">${i+1}</td>
-                <td style="white-space:nowrap">
+                <td>
                     ${canClaim ? `<button class="action-btn claim" onclick="claimRecord('${r.id}')">认领</button>` : ''}
                     ${canDel ? `<button class="action-btn del" onclick="deleteRecordWithConfirm('${r.id}')">🗑️</button>` : ''}
-                    ${canEditRecorder ? `<button class="action-btn edit-recorder" onclick="editRecorder('${r.id}', '${r.recorder || ''}')">✏️改负责人</button>` : ''}
-                    ${canEditFreight && contractNo ? `<button class="action-btn freight" onclick="showFreightModal('${contractNo}', '${freight.amount || ''}', '${(freight.detail || '').replace(/'/g, "\\'")}')">✏️运费</button>` : ''}
+                    ${canEditRecorder ? `<button class="action-btn edit-recorder" onclick="editRecorder('${r.id}', '${r.recorder || ''}')">改负责人</button>` : ''}
+                    ${contractNo ? `<button class="action-btn freight" onclick="showFreightModal('${contractNo}', '${freight.amount || ''}', '${(freight.detail || '').replace(/'/g, "\\'")}')">✏️运费</button>` : ''}
                 </td>
                 <td>${isPending ? '<span class="badge-wait">待认领</span>' : '<span class="badge-done">已入账</span>'}</td>
                 <td>${r.date || ''}</td>
@@ -533,47 +391,14 @@
                 <td>${r.cur} ${(r.actual||0).toLocaleString()}</td>
                 <td class="fee-col">${feeAmount > 0 ? feeAmount.toFixed(2) : '-'}</td>
                 <td>${actualAmount.toLocaleString()}</td>
-                <td style="color:#166534;">¥ ${(r.rmbValue||0).toLocaleString(undefined,{minimumFractionDigits:2})}</td>
-                <td style="max-width:150px;">
-                    <span style="cursor:pointer;" onclick="showFreightModal('${contractNo}', '${freight.amount || ''}', '${(freight.detail || '').replace(/'/g, "\\'")}')">${freightDisplay}</span>
-                    ${freightDetailDisplay}
-                </td>
-                <td>${recorderDisplay}</td>
-                <td>${isDup ? '<span class="badge-duplicate">⚠️相同日期+金额</span>' : ''}</td>
+                <td>¥ ${(r.rmbValue||0).toLocaleString(undefined,{minimumFractionDigits:2})}</td>
+                <td>${freightDisplay}${freightDetailDisplay}</td>
+                <td>${r.recorder || '未认领'}</td>
+                <td>${isDup ? '<span class="badge-duplicate">⚠️重复</span>' : ''}</td>
             </tr>`;
         }
         tbody.innerHTML = html;
-    }
-    
-    function isDuplicateRecord(record) {
-        let fp = `${record.date || ''}|${record.acc || ''}|${record.actual || 0}|${record.cur || ''}`;
-        return duplicateFingerprints.has(fp);
-    }
-    
-    function startListener() {
-        if (unsubscribe) unsubscribe();
-        unsubscribe = db.collection("payments").orderBy("orderSeq", "asc").onSnapshot(snap => {
-            allRecords = [];
-            let fingerprintCount = new Map();
-            let tempRecords = [];
-            snap.forEach(doc => {
-                let d = doc.data();
-                if (d.acc && (d.acc.includes("VTB") || d.acc === "VTB")) d.cur = "CNY";
-                if (d.cur === "CNY") { d.rate = 1; d.rmbValue = d.actual || 0; }
-                else if (!d.rate) d.rate = 6.85;
-                if (d.rmbValue === undefined && d.actual) d.rmbValue = d.cur === "CNY" ? d.actual : d.actual * d.rate;
-                let record = { id: doc.id, ...d };
-                tempRecords.push(record);
-                let fp = `${d.date || ''}|${d.acc || ''}|d.actual || 0}|${d.cur || ''}`;
-                fingerprintCount.set(fp, (fingerprintCount.get(fp) || 0) + 1);
-            });
-            duplicateFingerprints.clear();
-            for (let [fp, count] of fingerprintCount.entries()) {
-                if (count > 1) duplicateFingerprints.add(fp);
-            }
-            allRecords = tempRecords;
-            renderTable();
-        });
+        updateStats();
     }
     
     function updateStats() {
@@ -584,70 +409,37 @@
         document.getElementById('statTotalRmb').innerHTML = '¥ ' + totalRmb.toLocaleString(undefined,{minimumFractionDigits:2});
     }
     
+    function startListener() {
+        if (unsubscribe) unsubscribe();
+        unsubscribe = db.collection("payments").orderBy("orderSeq", "asc").onSnapshot(snap => {
+            allRecords = [];
+            let fingerprintCount = new Map();
+            snap.forEach(doc => {
+                let d = doc.data();
+                if (d.acc && (d.acc.includes("VTB") || d.acc === "VTB")) d.cur = "CNY";
+                if (d.cur === "CNY") { d.rate = 1; d.rmbValue = d.actual || 0; }
+                else if (!d.rate) d.rate = 6.85;
+                if (d.rmbValue === undefined && d.actual) d.rmbValue = d.cur === "CNY" ? d.actual : d.actual * d.rate;
+                let record = { id: doc.id, ...d };
+                allRecords.push(record);
+                let fp = `${d.date || ''}|${d.acc || ''}|${d.actual || 0}|${d.cur || ''}`;
+                fingerprintCount.set(fp, (fingerprintCount.get(fp) || 0) + 1);
+            });
+            duplicateFingerprints.clear();
+            for (let [fp, count] of fingerprintCount.entries()) {
+                if (count > 1) duplicateFingerprints.add(fp);
+            }
+            renderTable();
+        });
+    }
+    
     window.filterTable = () => renderTable();
     window.filterTableSales = () => renderTable();
-    
-    window.exportStaffDetail = () => {
-        if (!(isFinance || isAdmin)) return alert("无权限");
-        let filtered = getFilteredRecords();
-        if (filtered.length === 0) { alert("当前筛选无数据"); return; }
-        let data = filtered.map((r, idx) => ({
-            "序号": idx + 1,
-            "到账日期": r.date || '',
-            "账户": r.acc || '',
-            "币种": r.cur || '',
-            "到账金额": (r.actual || 0).toLocaleString('zh-CN', {minimumFractionDigits: 2}),
-            "手续费": (r.fee || 0).toLocaleString('zh-CN', {minimumFractionDigits: 2}),
-            "实到金额": ((r.actual||0) - (r.fee||0)).toLocaleString('zh-CN', {minimumFractionDigits: 2}),
-            "折算人民币": '¥ ' + (r.rmbValue || 0).toLocaleString('zh-CN', {minimumFractionDigits: 2}),
-            "合同号/PI": r.contract || '—',
-            "客户名称": r.customer || '—',
-            "负责人": r.recorder || '未认领',
-            "状态": r.status === '待认领' ? '待认领' : '已入账'
-        }));
-        let ws = XLSX.utils.json_to_sheet(data);
-        let wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, currentStaffFilter || '全部业务员');
-        XLSX.writeFile(wb, `到款明细_${currentStaffFilter || '全部'}_${new Date().toISOString().slice(0,10)}.xlsx`);
-        alert(`✅ 已导出 ${data.length} 条记录`);
-    };
-    
-    window.exportStaffSummary = () => {
-        if (!(isFinance || isAdmin)) return alert("无权限");
-        let staffSummary = {};
-        for (let staff of ALL_STAFF) {
-            let staffRecords = allRecords.filter(r => r.recorder === staff);
-            if (staffRecords.length === 0) continue;
-            let totalRmb = staffRecords.reduce((s, r) => s + (r.rmbValue || 0), 0);
-            let totalOriginal = staffRecords.reduce((s, r) => s + (r.actual || 0), 0);
-            let totalFee = staffRecords.reduce((s, r) => s + (r.fee || 0), 0);
-            staffSummary[staff] = {
-                count: staffRecords.length,
-                totalOriginal: totalOriginal,
-                totalFee: totalFee,
-                totalRmb: totalRmb,
-                currency: staffRecords[0]?.cur || 'USD'
-            };
-        }
-        let data = Object.entries(staffSummary).map(([staff, summary]) => ({
-            "业务员": staff,
-            "到款笔数": summary.count,
-            "原币总额": `${summary.currency} ${summary.totalOriginal.toLocaleString(undefined, {minimumFractionDigits:2})}`,
-            "手续费总额": summary.totalFee.toLocaleString(undefined, {minimumFractionDigits:2}),
-            "折算RMB总额": `¥ ${summary.totalRmb.toLocaleString(undefined, {minimumFractionDigits:2})}`
-        }));
-        if (data.length === 0) { alert("暂无业务员到款数据"); return; }
-        let ws = XLSX.utils.json_to_sheet(data);
-        let wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, "业务员汇总报表");
-        XLSX.writeFile(wb, `业务员汇总报表_${new Date().toISOString().slice(0,10)}.xlsx`);
-        alert(`✅ 已导出 ${data.length} 位业务员汇总数据`);
-    };
     
     window.claimRecord = async (id) => {
         let r = allRecords.find(x => x.id === id);
         if (!r || r.status !== '待认领') return alert('不可认领');
-        let contract = prompt("合同号/PI号", r.contract || "");
+        let contract = prompt("合同号", r.contract || "");
         if (!contract) return;
         let customer = prompt("客户名称", r.customer || "");
         if (!customer) return;
@@ -657,25 +449,22 @@
     
     window.deleteRecordWithConfirm = async (id) => {
         if (!(isFinance || isAdmin)) return alert("无权限");
-        const pwd = prompt("⚠️ 删除记录需要密码验证：");
-        if (pwd !== '111') { alert("密码错误，删除已取消"); return; }
-        if (confirm("确认删除这条记录？")) {
-            await db.collection("payments").doc(id).delete();
-            alert("已删除");
-        }
+        const pwd = prompt("⚠️ 删除需要密码111：");
+        if (pwd !== '111') { alert("密码错误"); return; }
+        if (confirm("确认删除？")) await db.collection("payments").doc(id).delete();
     };
     
     window.editRecorder = async (id, currentRecorder) => {
-        if (!(isFinance || isAdmin)) return alert("仅财务可修改负责人");
-        let selectHtml = `<select id="recorderSelect" style="padding:8px;border-radius:20px;">${ALL_STAFF.map(n => `<option value="${n}" ${n === currentRecorder ? 'selected' : ''}>${n}</option>`).join('')}</select>`;
+        if (!(isFinance || isAdmin)) return alert("仅财务可修改");
+        let selectHtml = `<select id="recorderSelect">${ALL_STAFF.map(n => `<option value="${n}" ${n === currentRecorder ? 'selected' : ''}>${n}</option>`).join('')}</select>`;
         let modal = document.createElement('div');
         modal.className = 'modal';
-        modal.innerHTML = `<div style="background:white;border-radius:24px;padding:24px;max-width:350px;text-align:center;"><h4>修改负责人</h4>${selectHtml}<div style="margin-top:20px;"><button class="btn btn-outline" onclick="this.closest('.modal').remove()">取消</button><button class="btn btn-primary" id="confirmRecorder" style="margin-left:10px;">确认</button></div></div>`;
+        modal.innerHTML = `<div style="background:white;border-radius:24px;padding:24px;"><h4>修改负责人</h4>${selectHtml}<div style="margin-top:20px;"><button onclick="this.closest('.modal').remove()">取消</button><button id="confirmRecorder">确认</button></div></div>`;
         document.body.appendChild(modal);
         document.getElementById('confirmRecorder').onclick = async () => {
             let newRecorder = document.getElementById('recorderSelect').value;
             await db.collection("payments").doc(id).update({ recorder: newRecorder });
-            alert(`负责人已修改为：${newRecorder}`);
+            alert(`负责人已修改`);
             modal.remove();
         };
     };
@@ -700,9 +489,9 @@
     
     window.clearAllData = async () => {
         if (!(isFinance || isAdmin)) return alert("无权限");
-        const pwd = prompt("⚠️ 一键清空将删除【所有】到款记录，请输入密码确认：");
-        if (pwd !== '111') { alert("密码错误，清空已取消"); return; }
-        if (!confirm("再次确认：真的要删除全部数据吗？此操作不可恢复！")) return;
+        const pwd = prompt("⚠️ 清空所有数据需要密码111：");
+        if (pwd !== '111') { alert("密码错误"); return; }
+        if (!confirm("确认删除全部数据？")) return;
         let snap = await db.collection("payments").get();
         let batch = db.batch();
         snap.forEach(doc => batch.delete(doc.ref));
@@ -726,19 +515,17 @@
     
     function smartParseText(text) {
         let result = { amount: null, contract: "", customer: "", currency: "CNY", account: "中行", date: new Date().toISOString().slice(0,10), fee: 0 };
-        let amountPatterns = [/(\d+(?:\.\d{1,2})?)\s*元(?:人民币)?/i, /金额[：:]\s*(\d+(?:\.\d{1,2})?)/i, /货款\s*(\d+(?:\.\d{1,2})?)/i, /到款\s*(\d+(?:\.\d{1,2})?)/i, /收款\s*(\d+(?:\.\d{1,2})?)/i, /(\d+(?:\.\d{1,2})?)\s*美元/i, /\$(\d+(?:\.\d{1,2})?)/i, /USD\s*(\d+(?:\.\d{1,2})?)/i, /(\d+(?:\.\d{1,2})?)(?=\s|$|，|,|。|；)/];
-        for (let pattern of amountPatterns) { let match = text.match(pattern); if (match) { result.amount = parseFloat(match[1]); break; } }
-        let contractPatterns = [/([A-Z]{1,2}\d{6}[A-Z]\d{2,3})/i, /(PO[-_]?\d{4,})/i, /(INV[-_]?\d{4,})/i, /合同[号:：]\s*([A-Z0-9\-_]+)/i];
-        for (let pattern of contractPatterns) { let match = text.match(pattern); if (match) { result.contract = match[1].toUpperCase(); break; } }
-        let customerPatterns = [/收([A-Za-z\u4e00-\u9fa5]+(?:[A-Za-z\u4e00-\u9fa5]|\s)*?)(?:货款|到款|付款|，|,|。|$)/i, /客户[：:]\s*([A-Za-z\u4e00-\u9fa5]+)/i];
-        for (let pattern of customerPatterns) { let match = text.match(pattern); if (match && match[1] && match[1].length < 30) { let cust = match[1].trim(); if (cust && !cust.match(/^\d+$/)) { result.customer = cust; break; } } }
-        if (text.match(/美元|USD|\$/i) && !text.match(/人民币|CNY|元(?!美元)/i)) result.currency = "USD";
+        let amountMatch = text.match(/(\d+(?:\.\d{1,2})?)\s*元/);
+        if (amountMatch) result.amount = parseFloat(amountMatch[1]);
+        let usdMatch = text.match(/(\d+(?:\.\d{1,2})?)\s*美元/i);
+        if (usdMatch) { result.amount = parseFloat(usdMatch[1]); result.currency = "USD"; }
+        let contractMatch = text.match(/([A-Z]{1,2}\d{6}[A-Z]\d{2,3})/i);
+        if (contractMatch) result.contract = contractMatch[1].toUpperCase();
+        let custMatch = text.match(/收([A-Za-z\u4e00-\u9fa5]+)/);
+        if (custMatch) result.customer = custMatch[1];
         if (text.match(/VTB/i)) result.account = "VTB";
-        else if (text.match(/港户|香港|离岸/i)) result.account = "港户";
-        else if (text.match(/私户|个人|微信|支付宝/i)) result.account = "私户";
-        if (text.match(/今天/i)) result.date = new Date().toISOString().slice(0,10);
-        else if (text.match(/昨天/i)) { let d = new Date(); d.setDate(d.getDate()-1); result.date = d.toISOString().slice(0,10); }
-        else { let dateMatch = text.match(/(\d{4})[-/](\d{1,2})[-/](\d{1,2})/); if (dateMatch) result.date = `${dateMatch[1]}-${dateMatch[2].padStart(2,'0')}-${dateMatch[3].padStart(2,'0')}`; }
+        else if (text.match(/港户/i)) result.account = "港户";
+        if (text.match(/今天/)) result.date = new Date().toISOString().slice(0,10);
         let feeMatch = text.match(/手续费[：:]\s*(\d+(?:\.\d{1,2})?)/i);
         if (feeMatch) result.fee = parseFloat(feeMatch[1]) || 0;
         return result;
@@ -748,36 +535,31 @@
         let mode = getImportMode();
         let existingFingerprints = new Set();
         let snap = await db.collection("payments").get();
-        snap.forEach(doc => { let d = doc.data(); let fp = `${d.date || ''}|${d.acc || ''}|${d.actual || 0}|${d.cur || ''}`; existingFingerprints.add(fp); });
-        let success = 0, duplicateSkipped = 0, errorCount = 0;
+        snap.forEach(doc => { let d = doc.data(); existingFingerprints.add(`${d.date || ''}|${d.acc || ''}|${d.actual || 0}|${d.cur || ''}`); });
+        let success = 0, dup = 0, err = 0;
         let batch = db.batch();
         let count = 0;
         let maxOrder = Date.now();
         for (let record of recordsList) {
-            if (!record.amount || record.amount <= 0) { errorCount++; continue; }
-            let fingerprint = `${record.date}|${record.account}|${record.amount}|${record.currency}`;
-            if (mode === 'smart' && existingFingerprints.has(fingerprint)) { duplicateSkipped++; continue; }
-            existingFingerprints.add(fingerprint);
+            if (!record.amount || record.amount <= 0) { err++; continue; }
+            let fp = `${record.date}|${record.account}|${record.amount}|${record.currency}`;
+            if (mode === 'smart' && existingFingerprints.has(fp)) { dup++; continue; }
+            existingFingerprints.add(fp);
             let rate = record.currency === "CNY" ? 1 : 6.85;
             let rmb = record.currency === "CNY" ? record.amount : record.amount * rate;
             let status = (record.contract && record.customer && record.customer !== "-") ? "已入账" : "待认领";
-            let docRef = db.collection("payments").doc();
-            batch.set(docRef, {
-                actual: record.amount, cur: record.currency, rate: rate, rmbValue: parseFloat(rmb.toFixed(2)),
+            batch.set(db.collection("payments").doc(), {
+                actual: record.amount, cur: record.currency, rate, rmbValue: parseFloat(rmb.toFixed(2)),
                 acc: record.account, contract: record.contract || "", customer: record.customer || "-",
-                recorder: status === "已入账" ? (record.staff || "") : "", status: status,
-                date: record.date, fee: record.fee || 0, orderSeq: maxOrder + success,
+                recorder: status === "已入账" ? (record.staff || "") : "", status, date: record.date,
+                fee: record.fee || 0, orderSeq: maxOrder + success,
                 createTime: firebase.firestore.FieldValue.serverTimestamp()
             });
             success++; count++;
             if (count >= 100) { await batch.commit(); batch = db.batch(); count = 0; }
         }
         if (count > 0) await batch.commit();
-        let msg = `📥 ${sourceName} 导入完成！\n✅ 新增: ${success} 条`;
-        if (mode === 'smart' && duplicateSkipped > 0) msg += `\n⏭️ 智能防重跳过: ${duplicateSkipped} 条`;
-        if (errorCount > 0) msg += `\n❌ 无效数据: ${errorCount} 条`;
-        alert(msg);
-        return success;
+        alert(`📥 导入完成\n新增: ${success} 条\n重复跳过: ${dup} 条\n无效: ${err} 条`);
     }
     
     window.smartImportExcel = async () => {
@@ -789,11 +571,10 @@
             let workbook = XLSX.read(e.target.result, { type: 'array' });
             let sheet = workbook.Sheets[workbook.SheetNames[0]];
             let rows = XLSX.utils.sheet_to_json(sheet, { defval: "" });
-            if (!rows.length) return alert("Excel无数据");
             let records = [];
             for (let row of rows) {
                 let amount = null;
-                for (let key of ["收款金额", "实到金额", "金额", "到账金额", "美金", "美元"]) {
+                for (let key of ["收款金额", "实到金额", "金额", "到账金额"]) {
                     for (let col in row) {
                         if (String(col).toLowerCase().includes(key.toLowerCase())) {
                             let v = row[col];
@@ -819,20 +600,19 @@
                 }
                 
                 let currency = "USD";
-                for (let key of ["币种", "currency"]) {
+                for (let key of ["币种"]) {
                     for (let col in row) {
                         if (String(col).toLowerCase().includes(key.toLowerCase())) {
                             let v = row[col];
                             if (v) { currency = String(v).toUpperCase().trim(); break; }
                         }
                     }
-                    if (currency !== "USD") break;
                 }
                 if (account.includes("VTB")) currency = "CNY";
                 if (currency !== "CNY" && currency !== "USD") currency = "USD";
                 
                 let dateStr = "";
-                for (let key of ["到账日期", "日期", "date"]) {
+                for (let key of ["到账日期", "日期"]) {
                     for (let col in row) {
                         if (String(col).toLowerCase().includes(key.toLowerCase())) {
                             let v = row[col];
@@ -844,7 +624,7 @@
                 let finalDate = parseDate(dateStr);
                 
                 let contract = "";
-                for (let key of ["合同号", "pi", "PI", "订单号"]) {
+                for (let key of ["合同号", "pi", "PI"]) {
                     for (let col in row) {
                         if (String(col).toLowerCase().includes(key.toLowerCase())) {
                             let v = row[col];
@@ -855,14 +635,13 @@
                 }
                 
                 let customer = "";
-                for (let key of ["客户名称", "客户", "国家"]) {
+                for (let key of ["客户名称", "客户"]) {
                     for (let col in row) {
                         if (String(col).toLowerCase().includes(key.toLowerCase())) {
                             let v = row[col];
                             if (v) { customer = String(v).trim(); break; }
                         }
                     }
-                    if (customer) break;
                 }
                 if (!customer) customer = "-";
                 
@@ -874,12 +653,10 @@
                             if (v) { staff = String(v).trim(); break; }
                         }
                     }
-                    if (staff) break;
                 }
                 
-                // 提取手续费
                 let fee = 0;
-                for (let key of ["手续费", "fee", "手续费金额"]) {
+                for (let key of ["手续费"]) {
                     for (let col in row) {
                         if (String(col).toLowerCase().includes(key.toLowerCase())) {
                             let v = row[col];
@@ -889,7 +666,6 @@
                             }
                         }
                     }
-                    if (fee > 0) break;
                 }
                 
                 records.push({ amount, account, currency, date: finalDate, contract, customer, staff, fee });
@@ -903,85 +679,82 @@
     window.showPasteModal = () => {
         let modal = document.createElement('div');
         modal.className = 'modal';
-        modal.innerHTML = `<div style="background:white;border-radius:24px;padding:24px;max-width:700px;width:90%;max-height:85%;overflow:auto;"><h3>📋 智能粘贴板导入</h3><p style="font-size:13px;color:#666;">支持自然语言，自动识别金额、合同号、客户、币种：</p><textarea id="pasteData" rows="6" placeholder="例如：&#10;收乌兹别克斯坦SAP E260404F01 货款1284元，今天顺丰已发走&#10;收到美国客户PO-12345 美金5000元 手续费15元"></textarea><div class="preview-box" id="previewBox"></div><div style="margin-top:16px;display:flex;gap:12px;justify-content:flex-end;"><button class="btn btn-outline" onclick="this.closest('.modal').remove()">取消</button><button class="btn btn-primary" onclick="executePasteImport()">开始导入</button></div></div>`;
+        modal.innerHTML = `<div style="background:white;border-radius:24px;padding:24px;max-width:600px;"><h3>智能粘贴板</h3><textarea id="pasteData" rows="6" placeholder="例如：收乌兹别克斯坦SAP E260404F01 货款1284元 手续费15元"></textarea><div class="preview-box" id="previewBox"></div><div style="margin-top:16px;display:flex;gap:12px;justify-content:flex-end;"><button onclick="this.closest('.modal').remove()">取消</button><button class="btn btn-primary" onclick="executePasteImport()">导入</button></div></div>`;
         document.body.appendChild(modal);
-        let textarea = modal.querySelector('#pasteData');
-        let previewBox = modal.querySelector('#previewBox');
-        textarea.addEventListener('input', () => {
-            let lines = textarea.value.split(/\r?\n/);
-            let previews = [];
-            for (let line of lines) {
-                if (line.trim()) {
-                    let parsed = smartParseText(line);
-                    previews.push(`📌 ${parsed.amount}${parsed.currency === 'CNY' ? '元' : parsed.currency} | 合同:${parsed.contract || '无'} | 客户:${parsed.customer || '无'} | 手续费:${parsed.fee || 0}`);
-                }
-            }
-            previewBox.innerHTML = previews.length ? `识别结果：<br>${previews.join('<br>')}` : '等待输入...';
+        let preview = modal.querySelector('#previewBox');
+        let ta = modal.querySelector('#pasteData');
+        ta.addEventListener('input', () => {
+            let parsed = smartParseText(ta.value);
+            preview.innerHTML = `识别：${parsed.amount}${parsed.currency === 'CNY' ? '元' : '美元'} | 合同:${parsed.contract || '无'} | 客户:${parsed.customer || '无'} | 手续费:${parsed.fee || 0}`;
         });
         window.pasteModal = modal;
     };
     
     window.executePasteImport = async () => {
-        let textarea = document.querySelector('#pasteData');
-        let text = textarea.value;
-        if (!text.trim()) { alert("请粘贴数据"); return; }
-        let lines = text.split(/\r?\n/);
-        let records = [];
-        for (let line of lines) {
-            line = line.trim();
-            if (!line) continue;
-            let parsed = smartParseText(line);
-            if (parsed.amount && parsed.amount > 0) {
-                records.push({ amount: parsed.amount, account: parsed.account, currency: parsed.currency, date: parsed.date, contract: parsed.contract, customer: parsed.customer || "-", staff: currentUser, fee: parsed.fee || 0 });
-            }
-        }
-        if (records.length === 0) { alert("没有识别到有效数据"); return; }
-        await importRecords(records, `智能粘贴板 (${records.length}条)`);
+        let text = document.querySelector('#pasteData')?.value;
+        if (!text) { alert("请粘贴数据"); return; }
+        let parsed = smartParseText(text);
+        if (!parsed.amount) { alert("未识别到金额"); return; }
+        let records = [{
+            amount: parsed.amount, account: parsed.account, currency: parsed.currency,
+            date: parsed.date, contract: parsed.contract, customer: parsed.customer || "-",
+            staff: currentUser, fee: parsed.fee || 0
+        }];
+        await importRecords(records, `粘贴板 (1条)`);
         if (window.pasteModal) window.pasteModal.remove();
+    };
+    
+    window.exportStaffDetail = () => {
+        if (!(isFinance || isAdmin)) return alert("无权限");
+        let filtered = getFilteredRecords();
+        if (filtered.length === 0) return alert("无数据");
+        let data = filtered.map((r, idx) => ({
+            "序号": idx+1, "到账日期": r.date, "账户": r.acc, "币种": r.cur, "到账金额": r.actual,
+            "手续费": r.fee || 0, "实到金额": (r.actual - (r.fee||0)), "折算人民币": r.rmbValue,
+            "合同号": r.contract, "客户": r.customer, "负责人": r.recorder, "状态": r.status
+        }));
+        let ws = XLSX.utils.json_to_sheet(data);
+        let wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, currentStaffFilter || '明细');
+        XLSX.writeFile(wb, `到款明细_${currentStaffFilter || '全部'}.xlsx`);
+        alert(`✅ 已导出 ${data.length} 条`);
+    };
+    
+    window.exportStaffSummary = () => {
+        if (!(isFinance || isAdmin)) return alert("无权限");
+        let summary = {};
+        for (let staff of ALL_STAFF) {
+            let staffRecords = allRecords.filter(r => r.recorder === staff);
+            if (staffRecords.length === 0) continue;
+            summary[staff] = {
+                count: staffRecords.length,
+                totalRmb: staffRecords.reduce((s,r) => s + (r.rmbValue||0), 0),
+                totalFee: staffRecords.reduce((s,r) => s + (r.fee||0), 0)
+            };
+        }
+        let data = Object.entries(summary).map(([staff, s]) => ({ "业务员": staff, "到款笔数": s.count, "手续费总额": s.totalFee.toFixed(2), "RMB总额": s.totalRmb.toFixed(2) }));
+        let ws = XLSX.utils.json_to_sheet(data);
+        let wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "业务员汇总");
+        XLSX.writeFile(wb, `业务员汇总.xlsx`);
+        alert(`✅ 已导出 ${data.length} 人`);
     };
     
     window.exportPrintReady = () => {
         if (!(isFinance || isAdmin)) return alert("无权限");
         let filtered = getFilteredRecords();
         if (filtered.length === 0) return alert("无数据");
-        let sorted = [...filtered].sort((a,b) => (a.date || '').localeCompare(b.date || ''));
-        let data = sorted.map((r, idx) => ({
-            "序号": idx + 1,
-            "到账日期": r.date || '',
-            "账户": r.acc || '',
-            "币种": r.cur || '',
-            "到账金额": (r.actual || 0).toLocaleString('zh-CN', {minimumFractionDigits: 2}),
-            "手续费": (r.fee || 0).toLocaleString('zh-CN', {minimumFractionDigits: 2}),
-            "实到金额": ((r.actual||0) - (r.fee||0)).toLocaleString('zh-CN', {minimumFractionDigits: 2}),
-            "折算人民币": '¥ ' + (r.rmbValue || 0).toLocaleString('zh-CN', {minimumFractionDigits: 2}),
-            "合同号/PI": r.contract || '—',
-            "客户名称": r.customer || '—',
-            "负责人": r.recorder || '未认领',
-            "状态": r.status === '待认领' ? '待认领' : '已入账'
+        let data = filtered.map((r, idx) => ({
+            "序号": idx+1, "到账日期": r.date, "账户": r.acc, "币种": r.cur,
+            "到账金额": r.actual, "手续费": r.fee || 0, "实到金额": (r.actual - (r.fee||0)),
+            "折算人民币": r.rmbValue, "合同号": r.contract, "客户": r.customer, "负责人": r.recorder
         }));
         let ws = XLSX.utils.json_to_sheet(data);
-        ws['!cols'] = [{wch:6},{wch:12},{wch:12},{wch:6},{wch:12},{wch:10},{wch:12},{wch:14},{wch:18},{wch:18},{wch:10},{wch:10}];
         let wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, "到款明细表");
-        XLSX.writeFile(wb, `到款明细表_${new Date().toISOString().slice(0,10)}.xlsx`);
-        alert(`✅ 已导出 ${data.length} 条记录`);
+        XLSX.utils.book_append_sheet(wb, ws, "到款明细");
+        XLSX.writeFile(wb, `到款明细_${new Date().toISOString().slice(0,10)}.xlsx`);
+        alert(`✅ 已导出 ${data.length} 条`);
     };
-    
-    function toggleHistory() {
-        const historyContainer = document.getElementById('historyTableContainer');
-        const toggleBtn = document.getElementById('toggleHistoryBtn');
-        if (historyExpanded) {
-            historyContainer.style.display = 'none';
-            toggleBtn.innerHTML = '<i class="fas fa-chevron-down"></i> 展开查看历史记录';
-            historyExpanded = false;
-        } else {
-            historyContainer.style.display = 'block';
-            toggleBtn.innerHTML = '<i class="fas fa-chevron-up"></i> 收起历史记录';
-            historyExpanded = true;
-        }
-    }
-    
-    document.getElementById('toggleHistoryBtn')?.addEventListener('click', toggleHistory);
     
     showLoginModal();
 </script>
