@@ -11,6 +11,8 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, sans-serif; }
         body { background: #eef2f6; padding: 20px; }
+        body.dark-mode { background: #0f172a; color: #e2e8f0; }
+        body.dark-mode .stat-card, body.dark-mode .toolbar, body.dark-mode .table-wrapper { background: #1e293b; border-color: #334155; }
         .container { max-width: 1600px; margin: 0 auto; }
         .flex-between { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
         .dashboard { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px; }
@@ -23,13 +25,14 @@
         .btn-warning { background: #ea580c; color: white; }
         .btn-danger { background: #b91c1c; color: white; }
         .btn-outline { background: white; border: 1px solid #cbd5e1; color: #1e293b; }
+        .btn-secondary { background: #6c757d; color: white; }
         .filter-group { display: flex; gap: 8px; align-items: center; background: #f1f5f9; padding: 5px 12px; border-radius: 40px; }
-        .filter-group input { background: transparent; border: none; padding: 6px 0; outline: none; }
+        .filter-group input, .filter-group select { background: transparent; border: none; padding: 6px 0; outline: none; }
         .mode-switch { background: #f1f5f9; padding: 6px 14px; border-radius: 40px; display: inline-flex; align-items: center; gap: 10px; font-size: 12px; }
         .table-wrapper { background: white; border-radius: 20px; border: 1px solid #e2edf2; overflow-x: auto; }
-        table { width: 100%; border-collapse: collapse; font-size: 12px; min-width: 1200px; }
+        table { width: 100%; border-collapse: collapse; font-size: 12px; min-width: 1350px; }
         th { background: #f8fafc; padding: 14px 10px; text-align: left; font-weight: 600; border-bottom: 1px solid #e2e8f0; }
-        td { padding: 12px 10px; border-bottom: 1px solid #f1f5f9; }
+        td { padding: 12px 10px; border-bottom: 1px solid #f1f5f9; vertical-align: top; }
         .pending-row { background-color: #fff9eb !important; }
         .badge-wait { background: #fee2e2; color: #b91c1c; padding: 2px 8px; border-radius: 40px; font-size: 11px; display: inline-block; }
         .badge-done { background: #dcfce7; color: #15803d; padding: 2px 8px; border-radius: 40px; font-size: 11px; display: inline-block; }
@@ -37,9 +40,14 @@
         .action-btn.claim { background: #fef3c7; color: #b45309; }
         .action-btn.del { color: #9ca3af; }
         .action-btn.del:hover { color: #dc2626; }
+        .action-btn.freight { background: #cffafe; color: #0891b2; }
+        .freight-detail { background: #f1f5f9; border-radius: 12px; padding: 6px 10px; margin-top: 6px; font-size: 11px; border-left: 3px solid #0891b2; }
         .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 10000; display: flex; align-items: center; justify-content: center; }
         .admin-panel { background: #fefce8; border-left: 4px solid #f59e0b; margin-bottom: 20px; }
         .password-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #e2edf2; flex-wrap: wrap; gap: 10px; }
+        .fee-col { color: #dc2626; font-weight: 500; }
+        body.dark-mode .mode-switch { background: #0f172a; }
+        body.dark-mode .freight-detail { background: #0f172a; }
     </style>
 </head>
 <body>
@@ -95,7 +103,7 @@
     <div class="table-wrapper">
         <table>
             <thead>
-                <tr><th>#</th><th>操作</th><th>状态</th><th>到账日期</th><th>账户</th><th>合同号</th><th>客户</th><th>币种/金额</th><th>手续费</th><th>实到金额</th><th>折算RMB</th><th>负责人</th></tr>
+                <tr><th>#</th><th>操作</th><th>状态</th><th>到账日期</th><th>账户</th><th>合同号</th><th>客户</th><th>币种/金额</th><th>手续费</th><th>实到金额</th><th>折算RMB</th><th>运费</th><th>负责人</th></tr>
             </thead>
             <tbody id="tableBody"></tbody>
         </table>
@@ -103,6 +111,7 @@
 </div>
 
 <script>
+    // Firebase 配置
     const firebaseConfig = {
         apiKey: "AIzaSyD0CC3t1v6NbzLrpa1xMlJJKKLk93YvrY8",
         authDomain: "emp-finance.firebaseapp.com",
@@ -111,20 +120,28 @@
         messagingSenderId: "5427570954",
         appId: "1:5427570954:web:87b30235589b5e413b32f3"
     };
-    firebase.initializeApp(firebaseConfig);
+    
+    // 初始化 Firebase
+    if (!firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
+    }
     const db = firebase.firestore();
     
+    // 全局变量
     let currentUser = '';
     let isFinance = false;
     let isAdmin = false;
     let allRecords = [];
     let unsubscribe = null;
+    let freightCache = {};
     
+    // 人员列表
     const ADMIN_USER = "王丽娜";
     const FINANCE_USERS = ["李月", "李洋洋"];
     const SALES_USERS = ["谭硕", "曲宁", "王静楠", "常超", "于圣一", "田思宇", "张娜", "孙秋迪", "腾筱宣", "王宇文"];
     const ALL_STAFF = [ADMIN_USER, ...FINANCE_USERS, ...SALES_USERS];
     
+    // 密码存储
     let passwords = {
         "王丽娜": "555", "李月": "666", "李洋洋": "666",
         "谭硕": "888", "曲宁": "888", "王静楠": "888", "常超": "888", "于圣一": "888",
@@ -133,12 +150,15 @@
     
     function loadPasswords() {
         const saved = localStorage.getItem('emp_finance_passwords');
-        if (saved) { try { Object.assign(passwords, JSON.parse(saved)); } catch(e) {} }
+        if (saved) {
+            try { Object.assign(passwords, JSON.parse(saved)); } catch(e) {}
+        }
     }
     function savePasswords() { localStorage.setItem('emp_finance_passwords', JSON.stringify(passwords)); }
     function verifyLogin(user, pwd) { return passwords[user] === pwd; }
     loadPasswords();
     
+    // 深色模式
     let darkMode = localStorage.getItem('darkMode') === 'true';
     if (darkMode) document.body.classList.add('dark-mode');
     document.getElementById('darkModeToggle').addEventListener('click', () => {
@@ -146,6 +166,70 @@
         localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
     });
     
+    // 运费功能
+    function getFreightId(record) {
+        if (!record.contract || record.contract === '—') return null;
+        return `${record.contract}_${record.date || ''}_${record.actual || 0}`;
+    }
+    
+    async function getFreight(record) {
+        const freightId = getFreightId(record);
+        if (!freightId) return { amount: '', detail: '' };
+        if (freightCache[freightId]) return freightCache[freightId];
+        try {
+            const doc = await db.collection('freight').doc(freightId).get();
+            const data = doc.exists ? { amount: doc.data().freightAmount || '', detail: doc.data().freightDetail || '' } : { amount: '', detail: '' };
+            freightCache[freightId] = data;
+            return data;
+        } catch(e) {
+            return { amount: '', detail: '' };
+        }
+    }
+    
+    async function setFreight(record, amount, detail) {
+        const freightId = getFreightId(record);
+        if (!freightId) return false;
+        await db.collection('freight').doc(freightId).set({
+            freightId, contractNo: record.contract, date: record.date,
+            amount: record.actual, freightAmount: amount, freightDetail: detail,
+            updatedBy: currentUser, updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        freightCache[freightId] = { amount, detail };
+        return true;
+    }
+    
+    window.showFreightModal = async (recordId) => {
+        const record = allRecords.find(r => r.id === recordId);
+        if (!record) return;
+        if (!record.contract || record.contract === '—') { alert('该记录暂无合同号'); return; }
+        const freight = await getFreight(record);
+        let modal = document.createElement('div');
+        modal.className = 'modal';
+        modal.innerHTML = `
+            <div style="background:white;border-radius:24px;padding:24px;max-width:500px;">
+                <h4>✏️ 运费登记</h4>
+                <p style="font-size:12px; color:#666;">合同号：${record.contract}<br>到账日期：${record.date || ''}<br>金额：${record.cur} ${(record.actual||0).toLocaleString()}</p>
+                <div style="margin:12px 0;"><label>运费金额：</label><input type="text" id="freightAmount" value="${freight.amount || ''}" placeholder="例如：¥500 或 无运费" style="width:100%; padding:8px; border-radius:12px; border:1px solid #cbd5e1;"></div>
+                <div style="margin:12px 0;"><label>运费明细：</label><textarea id="freightDetail" rows="3" placeholder="例如：顺丰空运，单号SF123456789" style="width:100%; padding:8px; border-radius:12px; border:1px solid #cbd5e1;">${freight.detail || ''}</textarea></div>
+                <div style="display:flex; gap:10px; justify-content:flex-end; margin-top:16px;">
+                    <button class="btn btn-outline" onclick="this.closest('.modal').remove()">取消</button>
+                    <button class="btn btn-primary" id="saveFreightBtn">保存</button>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+        document.getElementById('saveFreightBtn').onclick = async () => {
+            const amount = document.getElementById('freightAmount').value.trim();
+            const detail = document.getElementById('freightDetail').value.trim();
+            if (!amount) { alert('请填写运费金额（可填"无运费"）'); return; }
+            await setFreight(record, amount, detail);
+            alert('运费已保存');
+            modal.remove();
+            renderTable();
+        };
+    };
+    
+    // 登录弹窗
     function showLoginModal() {
         let modal = document.createElement('div');
         modal.className = 'modal';
@@ -200,7 +284,13 @@
         savePasswords();
         input.value = '';
         alert(`${user} 密码已修改`);
+        location.reload();
     };
+    
+    // 搜索时自动去除空格，支持模糊匹配
+    function normalizeSearchTerm(term) {
+        return (term || '').toLowerCase().replace(/\s/g, '');
+    }
     
     function getFilteredRecords() {
         let searchTerm = '';
@@ -214,9 +304,16 @@
             staffFilter = document.getElementById('staffFilterSelect')?.value || '';
         }
         
+        // 去除空格后的搜索词
+        let normalizedSearch = searchTerm.replace(/\s/g, '');
+        
         let filtered = [...allRecords];
         if (searchTerm) {
-            filtered = filtered.filter(r => (r.contract||'').toLowerCase().includes(searchTerm) || (r.customer||'').toLowerCase().includes(searchTerm));
+            filtered = filtered.filter(r => {
+                let contractNorm = (r.contract || '').toLowerCase().replace(/\s/g, '');
+                let customerNorm = (r.customer || '').toLowerCase().replace(/\s/g, '');
+                return contractNorm.includes(normalizedSearch) || customerNorm.includes(normalizedSearch);
+            });
         }
         if (staffFilter) {
             filtered = filtered.filter(r => r.recorder === staffFilter);
@@ -231,7 +328,7 @@
         let filtered = getFilteredRecords();
         
         if (filtered.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="12" style="text-align:center;padding:40px;">暂无数据，请导入Excel</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="13" style="text-align:center;padding:40px;">暂无数据，请导入Excel或检查筛选条件</td></tr>';
             updateStats();
             return;
         }
@@ -244,12 +341,16 @@
             let canDel = (isFinance || isAdmin);
             let feeAmount = r.fee || 0;
             let actualAmount = (r.actual || 0) - feeAmount;
+            let freight = freightCache[getFreightId(r)] || { amount: '', detail: '' };
+            let freightDisplay = freight.amount || '未登记';
+            let freightDetailDisplay = freight.detail ? `<div class="freight-detail">🚚 ${freight.detail}</div>` : '';
             
             html += `<tr class="${isPending ? 'pending-row' : ''}">
                 <td>${i+1}</td>
                 <td style="white-space:nowrap">
                     ${canClaim ? `<button class="action-btn claim" onclick="claim('${r.id}')">认领</button>` : ''}
                     ${canDel ? `<button class="action-btn del" onclick="deleteRecord('${r.id}')">删除</button>` : ''}
+                    ${r.contract && r.contract !== '—' ? `<button class="action-btn freight" onclick="showFreightModal('${r.id}')">✏️运费</button>` : ''}
                 </td>
                 <td>${isPending ? '<span class="badge-wait">待认领</span>' : '<span class="badge-done">已入账</span>'}</td>
                 <td>${r.date || ''}</td>
@@ -260,8 +361,12 @@
                 <td class="fee-col">${feeAmount > 0 ? feeAmount.toFixed(2) : '-'}</td>
                 <td>${actualAmount.toLocaleString()}</td>
                 <td>¥ ${(r.rmbValue||0).toLocaleString(undefined,{minimumFractionDigits:2})}</td>
+                <td style="max-width:180px;">
+                    <span style="cursor:pointer; color:#0891b2;" onclick="showFreightModal('${r.id}')">${freightDisplay}</span>
+                    ${freightDetailDisplay}
+                </td>
                 <td>${r.recorder || '未认领'}</td>
-            直接`;
+            </tr>`;
         }
         tbody.innerHTML = html;
         updateStats();
@@ -277,7 +382,7 @@
     
     function startListener() {
         if (unsubscribe) unsubscribe();
-        unsubscribe = db.collection("payments").orderBy("orderSeq", "asc").onSnapshot(snap => {
+        unsubscribe = db.collection("payments").orderBy("orderSeq", "asc").onSnapshot(async snap => {
             allRecords = [];
             snap.forEach(doc => {
                 let d = doc.data();
@@ -288,6 +393,13 @@
                 allRecords.push({ id: doc.id, ...d });
             });
             console.log("✅ 加载了", allRecords.length, "条记录");
+            
+            // 批量加载运费
+            for (let r of allRecords) {
+                if (r.contract && r.contract !== '—') {
+                    await getFreight(r);
+                }
+            }
             renderTable();
         });
     }
@@ -299,7 +411,9 @@
         if (!contract) return;
         let customer = prompt("客户名称", r.customer || "");
         if (!customer) return;
-        await db.collection("payments").doc(id).update({ contract: contract.trim(), customer: customer.trim(), status: "已入账", recorder: currentUser });
+        // 去除合同号中的空格
+        let cleanContract = contract.trim().replace(/\s/g, '');
+        await db.collection("payments").doc(id).update({ contract: cleanContract, customer: customer.trim(), status: "已入账", recorder: currentUser });
         alert("认领成功");
         renderTable();
     };
@@ -338,6 +452,11 @@
         let batch = db.batch();
         snap.forEach(doc => batch.delete(doc.ref));
         await batch.commit();
+        let freightSnap = await db.collection("freight").get();
+        let freightBatch = db.batch();
+        freightSnap.forEach(doc => freightBatch.delete(doc.ref));
+        await freightBatch.commit();
+        freightCache = {};
         alert("已清空 " + snap.size + " 条记录");
         location.reload();
     };
@@ -467,15 +586,23 @@
         if (window.pasteModal) window.pasteModal.remove();
     };
     
-    window.exportData = () => {
+    window.exportData = async () => {
         if (!(isFinance || isAdmin)) return alert("无权限");
         let filtered = getFilteredRecords();
         if (filtered.length === 0) return alert("无数据");
-        let data = filtered.map((r, idx) => ({
-            "序号": idx+1, "到账日期": r.date, "账户": r.acc, "币种": r.cur,
-            "到账金额": r.actual, "手续费": r.fee || 0, "实到金额": (r.actual - (r.fee||0)),
-            "折算人民币": r.rmbValue, "合同号": r.contract, "客户": r.customer, "负责人": r.recorder
-        }));
+        
+        let data = [];
+        for (let i = 0; i < filtered.length; i++) {
+            const r = filtered[i];
+            let freight = freightCache[getFreightId(r)] || { amount: '', detail: '' };
+            data.push({
+                "序号": i+1, "到账日期": r.date, "账户": r.acc, "币种": r.cur,
+                "到账金额": r.actual, "手续费": r.fee || 0, "实到金额": (r.actual - (r.fee||0)),
+                "折算人民币": r.rmbValue, "合同号": r.contract, "客户": r.customer,
+                "运费": freight.amount || '未登记', "运费明细": freight.detail || '',
+                "负责人": r.recorder
+            });
+        }
         let ws = XLSX.utils.json_to_sheet(data);
         let wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, "到款明细");
@@ -483,6 +610,7 @@
         alert("已导出 " + data.length + " 条");
     };
     
+    // 启动
     showLoginModal();
 </script>
 </body>
