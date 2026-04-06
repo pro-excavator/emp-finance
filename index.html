@@ -29,7 +29,7 @@
         .filter-group input, .filter-group select { background: transparent; border: none; padding: 6px 0; outline: none; }
         .mode-switch { background: #f1f5f9; padding: 6px 14px; border-radius: 40px; display: inline-flex; align-items: center; gap: 10px; font-size: 12px; }
         .table-wrapper { background: white; border-radius: 20px; border: 1px solid #e2edf2; overflow-x: auto; }
-        table { width: 100%; border-collapse: collapse; font-size: 12px; min-width: 1200px; }
+        table { width: 100%; border-collapse: collapse; font-size: 12px; min-width: 1300px; }
         th { background: #f8fafc; padding: 14px 10px; text-align: left; font-weight: 600; border-bottom: 1px solid #e2e8f0; }
         td { padding: 12px 10px; border-bottom: 1px solid #f1f5f9; vertical-align: top; }
         .pending-row { background-color: #fff9eb !important; }
@@ -45,8 +45,10 @@
         .admin-panel { background: #fefce8; border-left: 4px solid #f59e0b; margin-bottom: 20px; }
         .password-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #e2edf2; flex-wrap: wrap; gap: 10px; }
         .fee-col { color: #dc2626; font-weight: 500; }
+        .loading { text-align: center; padding: 40px; color: #666; }
         body.dark-mode .mode-switch { background: #0f172a; }
         body.dark-mode .freight-detail { background: #0f172a; }
+        body.dark-mode .loading { color: #aaa; }
     </style>
 </head>
 <body>
@@ -100,6 +102,7 @@
     </div>
 
     <div class="table-wrapper">
+        <div id="loadingMsg" class="loading" style="display: none;">⏳ 正在加载数据...</div>
         <table>
             <thead>
                 <tr><th>#</th><th>操作</th><th>状态</th><th>到账日期</th><th>账户</th><th>合同号</th><th>客户</th><th>币种/金额</th><th>手续费</th><th>实到金额</th><th>折算RMB</th><th>运费</th><th>负责人</th></tr>
@@ -134,17 +137,17 @@
     let unsubscribe = null;
     let freightCache = {};
     
-    // 人员列表
+    // 人员列表（已删除：田思宇、腾筱宣、王静楠、王宇文）
     const ADMIN_USER = "王丽娜";
     const FINANCE_USERS = ["李月", "李洋洋"];
-    const SALES_USERS = ["谭硕", "曲宁", "王静楠", "常超", "于圣一", "田思宇", "张娜", "孙秋迪", "腾筱宣", "王宇文"];
+    const SALES_USERS = ["谭硕", "曲宁", "常超", "于圣一", "张娜", "孙秋迪"];
     const ALL_STAFF = [ADMIN_USER, ...FINANCE_USERS, ...SALES_USERS];
     
-    // 密码存储
+    // 密码存储（同步删除对应人员）
     let passwords = {
         "王丽娜": "555", "李月": "666", "李洋洋": "666",
-        "谭硕": "888", "曲宁": "888", "王静楠": "888", "常超": "888", "于圣一": "888",
-        "田思宇": "888", "张娜": "888", "孙秋迪": "888", "腾筱宣": "888", "王宇文": "888"
+        "谭硕": "888", "曲宁": "888", "常超": "888", "于圣一": "888",
+        "张娜": "888", "孙秋迪": "888"
     };
     
     function loadPasswords() {
@@ -272,6 +275,15 @@
         const staffSelect = document.getElementById('staffFilterSelect');
         if (staffSelect) staffSelect.innerHTML = '<option value="">全部业务员</option>' + ALL_STAFF.map(s => `<option value="${s}">${s}</option>`).join('');
         
+        // 显示加载提示
+        const loadingDiv = document.getElementById('loadingMsg');
+        if (loadingDiv) loadingDiv.style.display = 'block';
+        
+        // 先断开旧监听，再启动新监听
+        if (unsubscribe) {
+            unsubscribe();
+            unsubscribe = null;
+        }
         startListener();
     };
     
@@ -324,6 +336,10 @@
         
         let filtered = getFilteredRecords();
         
+        // 隐藏加载提示
+        const loadingDiv = document.getElementById('loadingMsg');
+        if (loadingDiv) loadingDiv.style.display = 'none';
+        
         if (filtered.length === 0) {
             tbody.innerHTML = '<tr><td colspan="13" style="text-align:center;padding:40px;">暂无数据，请导入Excel或检查筛选条件</td></tr>';
             updateStats();
@@ -363,7 +379,7 @@
                     ${freightDetailDisplay}
                 </td>
                 <td>${r.recorder || '未认领'}</td>
-            直接`;
+            </tr>`;
         }
         tbody.innerHTML = html;
         updateStats();
@@ -391,13 +407,20 @@
             });
             console.log("✅ 加载了", allRecords.length, "条记录");
             
-            // 批量加载运费
+            // 批量加载运费（不阻塞渲染）
             for (let r of allRecords) {
                 if (r.contract && r.contract !== '—') {
                     await getFreight(r);
                 }
             }
             renderTable();
+        }, error => {
+            console.error("Firebase 监听错误:", error);
+            const loadingDiv = document.getElementById('loadingMsg');
+            if (loadingDiv) {
+                loadingDiv.innerHTML = '❌ 数据加载失败，请检查网络后刷新页面';
+                loadingDiv.style.display = 'block';
+            }
         });
     }
     
