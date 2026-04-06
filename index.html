@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EMP财务协作系统（修复版）</title>
+    <title>EMP财务协作系统</title>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
     <script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
@@ -36,12 +36,18 @@
         .action-btn.claim { background: #fef3c7; color: #b45309; }
         .action-btn.del { color: #9ca3af; }
         .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 10000; display: flex; align-items: center; justify-content: center; }
+        .status-bar { background: #e9ecef; padding: 8px 12px; border-radius: 20px; font-size: 12px; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; }
     </style>
 </head>
 <body>
 <div class="container">
     <div class="flex-between">
         <h1><i class="fas fa-hand-holding-usd"></i> EMP 财务协作系统</h1>
+    </div>
+
+    <div class="status-bar">
+        <span>📡 状态：<span id="statusText">等待登录...</span></span>
+        <button class="btn btn-outline" id="manualRefreshBtn" style="padding: 4px 12px;">🔄 强制刷新表格</button>
     </div>
 
     <div class="dashboard">
@@ -52,7 +58,7 @@
 
     <div class="toolbar">
         <button class="btn btn-success" onclick="exportData()">导出Excel</button>
-        <div class="filter-group"><input type="text" id="searchInput" placeholder="合同号/客户" onkeyup="simpleFilter()"></div>
+        <div class="filter-group"><input type="text" id="searchInput" placeholder="合同号/客户" onkeyup="filterTable()"></div>
         <div class="spacer"></div>
         <input type="file" id="excelFileInput" accept=".xlsx, .xls">
         <button class="btn btn-warning" onclick="importExcel()">导入Excel</button>
@@ -60,6 +66,7 @@
     </div>
 
     <div class="table-wrapper">
+        <div id="loadingMsg" style="display: none; text-align: center; padding: 40px;">⏳ 加载中...</div>
         <table id="dataTable">
             <thead>
                 <tr><th>#</th><th>操作</th><th>状态</th><th>到账日期</th><th>账户</th><th>合同号</th><th>客户</th><th>币种</th><th>金额</th><th>手续费</th><th>实到金额</th><th>折算RMB</th><th>负责人</th></tr>
@@ -89,7 +96,7 @@
     let unsubscribe = null;
     let currentUser = '';
     
-    // 人员列表（仅保留可登录人员）
+    // 人员列表
     const ALL_STAFF = ["王丽娜", "李月", "李洋洋", "谭硕", "曲宁", "常超", "于圣一", "张娜", "孙秋迪"];
     const passwords = {
         "王丽娜": "555", "李月": "666", "李洋洋": "666",
@@ -98,6 +105,13 @@
     };
     
     function verifyLogin(user, pwd) { return passwords[user] === pwd; }
+    
+    // 更新状态栏
+    function setStatus(text, isError = false) {
+        const span = document.getElementById('statusText');
+        span.innerText = text;
+        span.style.color = isError ? '#c62828' : '#2e7d32';
+    }
     
     // 登录弹窗
     function showLoginModal() {
@@ -121,41 +135,48 @@
         if (!verifyLogin(user, pwd)) { alert('密码错误'); return; }
         currentUser = user;
         if (window.loginModal) window.loginModal.remove();
+        setStatus(`已登录: ${user}，加载数据中...`);
         loadData();
     };
     
     // 加载数据
     function loadData() {
         if (unsubscribe) unsubscribe();
+        const loadingDiv = document.getElementById('loadingMsg');
+        if (loadingDiv) loadingDiv.style.display = 'block';
+        
         unsubscribe = db.collection("payments").orderBy("orderSeq", "asc").onSnapshot(snap => {
             allRecords = [];
             snap.forEach(doc => {
                 let d = doc.data();
-                // 修正币种和汇率
                 if (d.acc && d.acc.includes("VTB")) d.cur = "CNY";
                 if (d.cur === "CNY") { d.rate = 1; d.rmbValue = d.actual || 0; }
                 else if (!d.rate) d.rate = 6.85;
                 if (d.rmbValue === undefined && d.actual) d.rmbValue = d.cur === "CNY" ? d.actual : d.actual * d.rate;
                 allRecords.push({ id: doc.id, ...d });
             });
-            console.log(`✅ 已加载 ${allRecords.length} 条记录`);
-            // 直接渲染，不做任何筛选（除了搜索框）
+            console.log(`✅ 加载了 ${allRecords.length} 条记录`);
+            if (loadingDiv) loadingDiv.style.display = 'none';
+            setStatus(`已加载 ${allRecords.length} 条记录`);
+            // 强制渲染表格
             renderTable();
+        }, error => {
+            console.error("Firebase 错误:", error);
+            setStatus(`错误: ${error.message}`, true);
+            if (loadingDiv) loadingDiv.style.display = 'none';
         });
     }
     
-    // 简单筛选（仅基于合同号/客户）
-    function simpleFilter() {
-        renderTable();
-    }
-    
+    // 渲染表格
     function renderTable() {
         const tbody = document.getElementById('tableBody');
         if (!tbody) {
-            console.error("❌ 未找到 tableBody 元素");
+            console.error("❌ 严重错误: 找不到 tableBody 元素！");
+            setStatus("页面元素缺失，请刷新重试", true);
             return;
         }
         
+        // 搜索过滤
         let searchTerm = document.getElementById('searchInput')?.value || '';
         let filtered = allRecords;
         if (searchTerm) {
@@ -182,7 +203,10 @@
             
             html += `<tr class="${isPending ? 'pending-row' : ''}">
                 <td>${i+1}</td>
-                <td>${canClaim ? `<button class="action-btn claim" onclick="claim('${r.id}')">认领</button>` : ''}</td>
+                <td style="white-space:nowrap">
+                    ${canClaim ? `<button class="action-btn claim" onclick="claim('${r.id}')">认领</button>` : ''}
+                    ${(isFinanceOrAdmin()) ? `<button class="action-btn del" onclick="deleteRecord('${r.id}')">删除</button>` : ''}
+                </td>
                 <td>${isPending ? '<span class="badge-wait">待认领</span>' : '<span class="badge-done">已入账</span>'}</td>
                 <td>${r.date || ''}</td>
                 <td>${r.acc || ''}</td>
@@ -200,6 +224,10 @@
         updateStats();
     }
     
+    function isFinanceOrAdmin() {
+        return currentUser === '王丽娜' || currentUser === '李月' || currentUser === '李洋洋';
+    }
+    
     function updateStats() {
         let pending = allRecords.filter(r => r.status === '待认领').length;
         let totalRmb = allRecords.reduce((s, r) => s + (r.rmbValue || 0), 0);
@@ -207,6 +235,10 @@
         document.getElementById('statTotal').innerText = allRecords.length;
         document.getElementById('statTotalRmb').innerHTML = '¥ ' + totalRmb.toLocaleString(undefined, {minimumFractionDigits: 2});
     }
+    
+    window.filterTable = function() {
+        renderTable();
+    };
     
     window.claim = async (id) => {
         let r = allRecords.find(x => x.id === id);
@@ -218,6 +250,14 @@
         let cleanContract = contract.trim().replace(/\s/g, '');
         await db.collection("payments").doc(id).update({ contract: cleanContract, customer: customer.trim(), status: "已入账", recorder: currentUser });
         alert("认领成功");
+        // 数据会自动通过监听器刷新，无需手动调用
+    };
+    
+    window.deleteRecord = async (id) => {
+        if (!isFinanceOrAdmin()) return alert("无权限");
+        const pwd = prompt("删除需要密码111：");
+        if (pwd !== '111') { alert("密码错误"); return; }
+        if (confirm("确认删除？")) await db.collection("payments").doc(id).delete();
     };
     
     window.clearAllData = async () => {
@@ -313,6 +353,12 @@
         XLSX.writeFile(wb, `到款明细_${new Date().toISOString().slice(0,10)}.xlsx`);
         alert("已导出 " + data.length + " 条");
     };
+    
+    // 手动刷新按钮
+    document.getElementById('manualRefreshBtn').addEventListener('click', () => {
+        renderTable();
+        setStatus("已手动刷新表格");
+    });
     
     showLoginModal();
 </script>
